@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 /**
  * 
@@ -9,7 +10,25 @@ import java.util.ArrayList;
  *
  */
 public class Crawler {
-	private static int NUM_CONCURRENT_REQUESTS = 20;
+	
+	public static final int NUM_CONCURRENT_REQUESTS = 20;
+	
+	private Semaphore semaphore;
+	
+	/**
+	 * 
+	 * @param semaphore
+	 */
+	public Crawler(Semaphore semaphore) {
+		this.semaphore = semaphore;
+	}
+	
+	/**
+	 * 
+	 */
+	public Crawler() {
+		this.semaphore = new Semaphore(NUM_CONCURRENT_REQUESTS);
+	}
 	
 	/**
 	 * 
