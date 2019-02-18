@@ -9,19 +9,52 @@ public class Website {
 
 	private String url;
 
+	private String html;
+
 	public Website(String website) {
 		this.url = website;
+		this.html = null;
 	}
 
-	public String getWebsite() {
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
 		return url;
 	}
 
-	public void setWebsite(String website) {
-		this.url = website;
+	/**
+	 * @param url the url to set
+	 */
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
-	private String getHTML() throws IOException {
+	/**
+	 * @return the html of the website or null if there is an error retreiving the HTML
+	 * @throws IOException
+	 */
+	public String getHtml() {
+		if (this.html == null)
+			try {
+				requestHTML();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		return html;
+	}
+
+	/**
+	 * @param html the html to set
+	 * @throws IOException
+	 */
+	public void setHtml(String html) throws IOException {
+		this.html = html;
+		requestHTML();
+	}
+
+	private String requestHTML() throws IOException {
 		URL urlObject = new URL("http://" + url);
 
 		BufferedReader reader = null;
@@ -39,14 +72,18 @@ public class Website {
 
 			return html.toString();
 		} finally {
-			if(reader != null)
+			if (reader != null)
 				reader.close();
 		}
 	}
 
 	public boolean searchForTerm(String searchTerm) throws IOException {
 		// Retrieve website url's HTML
-		String html = getHTML();
+		String html = getHtml();
+		
+		// return false immediately if the website html was not able to be retrieved
+		if(html == null)
+			return false;
 
 		// Use searchTerm as a regular expression pattern
 		Pattern pattern = Pattern.compile(searchTerm);

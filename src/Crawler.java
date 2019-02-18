@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -12,32 +14,59 @@ import java.util.concurrent.Semaphore;
  */
 public class Crawler {
 	
-	public static final int NUM_CONCURRENT_REQUESTS = 1;
+	public static final int NUM_CONCURRENT_REQUESTS = 20;
 	
 	private Semaphore semaphore;
+	
+	private String urlsFile;
+	
+	private List<String> websites;
 	
 	/**
 	 * 
 	 * @param semaphore
+	 * @param urlsFile
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public Crawler(Semaphore semaphore) {
+	public Crawler(Semaphore semaphore, String urlsFile) throws FileNotFoundException, IOException {
 		this.semaphore = semaphore;
+		this.urlsFile = urlsFile;
+		loadWebsites();
 	}
-	
+
 	/**
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 * 
 	 */
-	public Crawler() {
+	public Crawler(String urlsFile) throws FileNotFoundException, IOException {
 		this.semaphore = new Semaphore(NUM_CONCURRENT_REQUESTS);
+		this.urlsFile = urlsFile;
+		loadWebsites();
 	}
 	
-	public List<String> crawl(List<String> websites) throws InterruptedException{
+	private void loadWebsites() throws FileNotFoundException, IOException {
+		WebsiteFileReader reader = new WebsiteFileReader(urlsFile);
+		this.websites = reader.getWebsiteUrls();
+	}
+	
+	public String getUrlsFile() {
+		return urlsFile;
+	}
+
+	public void setUrlsFile(String urlsFile) throws FileNotFoundException, IOException {
+		this.urlsFile = urlsFile;
+		loadWebsites();
+	}
+
+	public List<String> search(String term) throws InterruptedException{
 		List<String> results = new ArrayList<String>();
 		
 		ArrayList<WebsiteSearcher> threads = new ArrayList<WebsiteSearcher>();
 		
 		for(String s : websites) {
-			WebsiteSearcher thread = new WebsiteSearcher(semaphore, new Website(s), "head");
+			WebsiteSearcher thread = new WebsiteSearcher(semaphore, new Website(s), term);
 			threads.add(thread);
 			thread.run();
 		}
@@ -45,7 +74,7 @@ public class Crawler {
 		for(WebsiteSearcher thread : threads) {
 			thread.join();
 			if(thread.isResult())
-				results.add(thread.getWebsite().getWebsite());
+				results.add(thread.getWebsite().getUrl());
 		}
 		
 		return results;
@@ -60,12 +89,12 @@ public class Crawler {
 		for(String s : rs)
 			results.add(s);
 		
-		Crawler crawl = new Crawler();
-		try {
-			System.out.println(crawl.crawl(results));
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		Crawler crawl = new Crawler();
+//		try {
+//			System.out.println(crawl.crawl(results));
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 }

@@ -32,13 +32,17 @@ public class WebsiteSearcher extends Thread {
 	@Override
 	public void run() {
 		try {
-			System.out.println(website.getWebsite());
+			System.out.println(website.getUrl());
 			
 			// acquire semaphore if available or else what till it is available
 			semaphore.tryAcquire();
 			
-			System.out.println("Searching: " + website.getWebsite());
-
+			System.out.println("Searching: " + website.getUrl());
+			
+			website.getHtml();
+			
+			semaphore.release();
+			
 			// check if search term exists within the website's html
 			boolean exists = website.searchForTerm(searchTerm);
 
