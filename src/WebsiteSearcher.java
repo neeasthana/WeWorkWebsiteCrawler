@@ -15,6 +15,8 @@ public class WebsiteSearcher extends Thread {
 
 	private String searchTerm;
 
+	private boolean result;
+
 	/**
 	 * 
 	 * @param semaphore
@@ -30,16 +32,47 @@ public class WebsiteSearcher extends Thread {
 	@Override
 	public void run() {
 		try {
+			System.out.println(website.getWebsite());
+			
 			// acquire semaphore if available or else what till it is available
 			semaphore.tryAcquire();
 			
+			System.out.println("Searching: " + website.getWebsite());
+
 			// check if search term exists within the website's html
-			website.searchIfExists(searchTerm);
-			
+			boolean exists = website.searchForTerm(searchTerm);
+
+			result = exists;
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			semaphore.release();
 		}
 	}
+
+	public Website getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(Website website) {
+		this.website = website;
+	}
+
+	public String getSearchTerm() {
+		return searchTerm;
+	}
+
+	public void setSearchTerm(String searchTerm) {
+		this.searchTerm = searchTerm;
+	}
+
+	public boolean isResult() {
+		return result;
+	}
+
+	public void setResult(boolean result) {
+		this.result = result;
+	}
+
 }

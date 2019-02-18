@@ -10,12 +10,19 @@ public class Website {
 	private String website;
 
 	public Website(String website) {
-		super();
+		this.website = website;
+	}
+
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
 		this.website = website;
 	}
 
 	private String getHTML() throws IOException {
-		URL url = new URL(website);
+		URL url = new URL("http://www." + website);
 
 		BufferedReader reader = null;
 
@@ -36,7 +43,7 @@ public class Website {
 		}
 	}
 
-	public boolean searchIfExists(String searchTerm) throws IOException {
+	public boolean searchForTerm(String searchTerm) throws IOException {
 		// Retrieve website url's HTML
 		String html = getHTML();
 
