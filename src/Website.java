@@ -7,22 +7,22 @@ import java.util.regex.Pattern;
 
 public class Website {
 
-	private String website;
+	private String url;
 
 	public Website(String website) {
-		this.website = website;
+		this.url = website;
 	}
 
 	public String getWebsite() {
-		return website;
+		return url;
 	}
 
 	public void setWebsite(String website) {
-		this.website = website;
+		this.url = website;
 	}
 
 	private String getHTML() throws IOException {
-		URL url = new URL("http://www." + website);
+		URL urlObject = new URL("http://" + url);
 
 		BufferedReader reader = null;
 
@@ -30,7 +30,7 @@ public class Website {
 			String line;
 			StringBuffer html = new StringBuffer();
 
-			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+			reader = new BufferedReader(new InputStreamReader(urlObject.openStream()));
 
 			// read the website html line by line
 			while ((line = reader.readLine()) != null) {
@@ -39,7 +39,8 @@ public class Website {
 
 			return html.toString();
 		} finally {
-			reader.close();
+			if(reader != null)
+				reader.close();
 		}
 	}
 
