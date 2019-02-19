@@ -43,8 +43,13 @@ public class WebsiteFileReader {
 		    	
 		    	String url = lineElements[1];
 		    	
-		    	if(!url.equals("\"URL\""))
+		    	if(!url.equals("\"URL\"")) {
+		    		// remove all quotations from url 
+		    		url = url.replace("\"","");
+		    		
 		    		results.add(url);
+		    	}
+		    	
 		    }
 		    
 		    return results;
