@@ -11,6 +11,8 @@ import java.util.concurrent.Semaphore;
  */
 
 /**
+ * Orchestrates concurrent searches across all websites in urls.txt file
+ * 
  * @author neeraj
  *
  */
@@ -53,14 +55,20 @@ public class Crawler {
 	
 	/**
 	 * Default Constructor using current directory's urls.txt file as the urlsFile 
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
+	 * @throws IOException if urlsFile is unable to be read
+	 * @throws FileNotFoundException if urlsFile does not exist 
 	 */
 	public Crawler() throws FileNotFoundException, IOException {
 		// Get current working directory
 		this(System.getProperty("user.dir") + "/urls.txt");
 	}
 
+	/**
+	 * Loads the of list of urls found in the urls.txt file
+	 * 
+	 * @throws IOException if urlsFile is unable to be read
+	 * @throws FileNotFoundException if urlsFile does not exist
+	 */
 	private void loadWebsites() throws FileNotFoundException, IOException {
 		WebsiteFileReader reader = new WebsiteFileReader(urlsFile);
 		this.websites = reader.getWebsiteUrls();

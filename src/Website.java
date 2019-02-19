@@ -5,14 +5,25 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Operations for retrieving a website's HTML and searching for terms
+ * 
+ * @author neeraj
+ *
+ */
 public class Website {
 
 	private String url;
 
 	private String html;
 
-	public Website(String website) {
-		this.url = website;
+	/**
+	 * Constructor
+	 * 
+	 * @param url for the website address
+	 */
+	public Website(String url) {
+		this.url = url;
 		this.html = null;
 	}
 
@@ -31,8 +42,8 @@ public class Website {
 	}
 
 	/**
-	 * @return the html of the website or null if there is an error retreiving the HTML
-	 * @throws IOException
+	 * @return the html of the website or null if there is an error retrieving the HTML
+	 * @throws IOException if url is unreachable or not able to be obtained
 	 */
 	public String getHtml() {
 		if (this.html == null)
@@ -47,13 +58,18 @@ public class Website {
 
 	/**
 	 * @param html the html to set
-	 * @throws IOException
+	 * @throws IOException if url is unreachable or not able to be obtained
 	 */
 	public void setHtml(String html) throws IOException {
 		this.html = html;
 		requestHTML();
 	}
 
+	/**
+	 * 
+	 * @return the html of the website or null if there is an error retrieving the HTML
+	 * @throws IOException if url is unreachable or not able to be obtained
+	 */
 	private String requestHTML() throws IOException {
 		URL urlObject = new URL("http://" + url);
 
@@ -77,6 +93,13 @@ public class Website {
 		}
 	}
 
+	/**
+	 * search for searchTerm in website's HTML (false otherwise)
+	 * 
+	 * @param searchTerm to search for within the HTML of a website
+	 * @return true if searchTerm is in website HTML (false otherwise)
+	 * @throws IOException if url is unreachable or not able to be obtained
+	 */
 	public boolean searchForTerm(String searchTerm) throws IOException {
 		// Retrieve website url's HTML
 		String html = getHtml();

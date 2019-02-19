@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Handles operations of reading the urls from the urls.txt file
  * 
  * @author neeraj
  *
@@ -14,10 +15,21 @@ public class WebsiteFileReader {
 
 	private String fileLocation;
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param fileLocation of urls.txt file
+	 */
 	public WebsiteFileReader(String fileLocation) {
 		this.fileLocation = fileLocation;
 	}
 	
+	/**
+	 * 
+	 * @return list of urls found in the urls.txt file
+	 * @throws FileNotFoundException if file is not able to be retrieved
+	 * @throws IOException if file is unable to be parsed
+	 */
 	public List<String> getWebsiteUrls() throws FileNotFoundException, IOException{
 		FileReader fileReader = new FileReader(fileLocation);
 		
@@ -39,15 +51,4 @@ public class WebsiteFileReader {
 			fileReader.close();
 		}
 	}
-	
-	public static void main(String [] args) {
-		WebsiteFileReader reader = new WebsiteFileReader("/home/neeraj/Documents/Projects/WeWorkWebsiteCrawler/src/urls.txt");
-		try {
-			System.out.println(reader.getWebsiteUrls());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 }
