@@ -36,7 +36,9 @@ public class WebsiteSearcher extends Thread {
 	 */
 	@Override
 	public void run() {
-		try {			
+		try {
+			System.out.println(website.getUrl());
+			
 			// acquire semaphore if available or else what till it is available
 			semaphore.tryAcquire();
 			

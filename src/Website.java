@@ -48,7 +48,7 @@ public class Website {
 	public String getHtml() {
 		if (this.html == null)
 			try {
-				requestHTML();
+				this.html = requestHTML();
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;
@@ -62,7 +62,7 @@ public class Website {
 	 */
 	public void setHtml(String html) throws IOException {
 		this.html = html;
-		requestHTML();
+		this.html = requestHTML();
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class Website {
 	 * @return the html of the website or null if there is an error retrieving the HTML
 	 * @throws IOException if url is unreachable or not able to be obtained
 	 */
-	private String requestHTML() throws IOException {
+	 private String requestHTML() throws IOException {
 		URL urlObject = new URL("http://" + url);
 
 		BufferedReader reader = null;
@@ -85,7 +85,7 @@ public class Website {
 			while ((line = reader.readLine()) != null) {
 				html.append(line);
 			}
-
+			
 			return html.toString();
 		} finally {
 			if (reader != null)
@@ -107,7 +107,11 @@ public class Website {
 		// return false immediately if the website html was not able to be retrieved
 		if(html == null)
 			return false;
-
+		
+		// ensure search is case insensitive by making all characters uppercase
+		html = html.toUpperCase();
+		searchTerm = searchTerm.toUpperCase();
+		
 		// Use searchTerm as a regular expression pattern
 		Pattern pattern = Pattern.compile(searchTerm);
 
