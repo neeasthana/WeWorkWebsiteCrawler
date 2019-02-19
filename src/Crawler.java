@@ -39,7 +39,7 @@ public class Crawler {
 	}
 
 	/**
-	 * Constructor using the NUM_CONCURRENT_REQUESTS to create the semaphore for number of concurrent http requests
+	 * Default constructor using the NUM_CONCURRENT_REQUESTS to create the semaphore for number of concurrent http requests
 	 * 
 	 * @param urlsFile is the urls.txt that contains all of the urls to search for the search term
 	 * @throws IOException if urlsFile is unable to be read
@@ -51,6 +51,16 @@ public class Crawler {
 		loadWebsites();
 	}
 	
+	/**
+	 * Default Constructor using current directory's urls.txt file as the urlsFile 
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 */
+	public Crawler() throws FileNotFoundException, IOException {
+		// Get current working directory
+		this(System.getProperty("user.dir") + "/urls.txt");
+	}
+
 	private void loadWebsites() throws FileNotFoundException, IOException {
 		WebsiteFileReader reader = new WebsiteFileReader(urlsFile);
 		this.websites = reader.getWebsiteUrls();
@@ -132,38 +142,5 @@ public class Crawler {
 	    
 	    // Close the writer
 	    writer.close();
-	}
-	
-	public static void main(String[] args){
-		ArrayList<String> results = new ArrayList<String>();
-		
-		String[] rs = {"facebook.com/", "twitter.com/", "google.com/", "youtube.com/", "wordpress.org/", "adobe.com/", "blogspot.com/", "wikipedia.org/", "linkedin.com/", "wordpress.com/", "yahoo.com/", "amazon.com/", "blogspot.com/", "wikipedia.org/", "linkedin.com/", "wordpress.com/", "yahoo.com/", "amazon.com/", "flickr.com/", "pinterest.com/", "tumblr.com/", "w3.org/", "apple.com/", "myspace.com/", "vimeo.com/", "microsoft.com/", "youtu.be/", "qq.com/", "digg.com/", "baidu.com/", "stumbleupon.com/", "addthis.com/", "statcounter.com/", "feedburner.com/", "miibeian.gov.cn/", "delicious.com/", "nytimes.com/", "reddit.com/", "weebly.com/", "bbc.co.uk/", "blogger.com/", "msn.com/", "macromedia.com/", "goo.gl/", "instagram.com/", "gov.uk/", "icio.us/", "yandex.ru/", "cnn.com/", "webs.com/", "google.de/", "t.co/", "livejournal.com/", "imdb.com/", "mail.ru/", "jimdo.com/", "sourceforge.net/", "go.com/", "tinyurl.com/", "vk.com/", "google.co.jp/", "fc2.com/", "free.fr/", "joomla.org/", "creativecommons.org/", "typepad.com/", "networkadvertising.org/", "technorati.com/", "sina.com.cn/", "hugedomains.com/", "about.com/", "theguardian.com/", "yahoo.co.jp/", "nih.gov/", "huffingtonpost.com/", "google.co.uk/", "mozilla.org/", "51.la/", "aol.com/", "ebay.com/"};
-		
-		
-		for(String s : rs)
-			results.add(s);
-		
-		
-		try {
-			System.out.println("Working Directory = " +
-		              System.getProperty("user.dir"));
-			Crawler crawl = new Crawler("/home/neeraj/Documents/Projects/WeWorkWebsiteCrawler/src/results.txt");
-			
-//			crawl.writeToFile(results);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-//		Crawler crawl = new Crawler();
-//		try {
-//			System.out.println(crawl.crawl(results));
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
 }
