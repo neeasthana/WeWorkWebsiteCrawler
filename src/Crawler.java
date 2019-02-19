@@ -25,11 +25,12 @@ public class Crawler {
 	private List<String> websites;
 	
 	/**
+	 * Constructor
 	 * 
-	 * @param semaphore
-	 * @param urlsFile
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
+	 * @param semaphore is the semaphore to control the number of concurrent http requests
+	 * @param urlsFile is the urls.txt that contains all of the urls to search for the search term
+	 * @throws IOException if urlsFile is unable to be read
+	 * @throws FileNotFoundException if urlsFile does not exist
 	 */
 	public Crawler(Semaphore semaphore, String urlsFile) throws FileNotFoundException, IOException {
 		this.semaphore = semaphore;
@@ -38,9 +39,11 @@ public class Crawler {
 	}
 
 	/**
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
+	 * Constructor using the NUM_CONCURRENT_REQUESTS to create the semaphore for number of concurrent http requests
 	 * 
+	 * @param urlsFile is the urls.txt that contains all of the urls to search for the search term
+	 * @throws IOException if urlsFile is unable to be read
+	 * @throws FileNotFoundException if urlsFile does not exist
 	 */
 	public Crawler(String urlsFile) throws FileNotFoundException, IOException {
 		this.semaphore = new Semaphore(NUM_CONCURRENT_REQUESTS);
@@ -53,10 +56,21 @@ public class Crawler {
 		this.websites = reader.getWebsiteUrls();
 	}
 	
+	/**
+	 * 
+	 * @return file location of urls.txt file that is supplied
+	 */
 	public String getUrlsFile() {
 		return urlsFile;
 	}
-
+	
+	/**
+	 * Sets the location of the urls.txt file and loads the website urls specified in that file
+	 * 
+	 * @param urlsFile is the urls.txt that contains all of the urls to search for the search term
+	 * @throws IOException if urlsFile is unable to be read
+	 * @throws FileNotFoundException if urlsFile does not exist
+	 */
 	public void setUrlsFile(String urlsFile) throws FileNotFoundException, IOException {
 		this.urlsFile = urlsFile;
 		loadWebsites();
@@ -99,17 +113,24 @@ public class Crawler {
 	
 	/**
 	 * writes urls to results.txt in the current directory
+	 * the method will override any previous results.txt file
 	 * 
 	 * @param urls to write to results.txt
-	 * @throws IOException
+	 * @throws IOException if writer is unable to be opened
 	 */
 	private void writeResultsToFile(List<String> urls) throws IOException {
+		// Get current working directory
+		String currentDirectory = System.getProperty("user.dir");
 		
-	    BufferedWriter writer = new BufferedWriter(new FileWriter("/home/neeraj/Documents/Projects/WeWorkWebsiteCrawler/src/something.txt", false));
+		// Open Writer to the results file
+		// Set to override the results.txt file
+	    BufferedWriter writer = new BufferedWriter(new FileWriter(currentDirectory + "/results.txt", false));
 	    
+	    // Write to the results file line by line
 	    for(String s : urls)
 	    	writer.append(s + "\n");
-	     
+	    
+	    // Close the writer
 	    writer.close();
 	}
 	
@@ -124,6 +145,8 @@ public class Crawler {
 		
 		
 		try {
+			System.out.println("Working Directory = " +
+		              System.getProperty("user.dir"));
 			Crawler crawl = new Crawler("/home/neeraj/Documents/Projects/WeWorkWebsiteCrawler/src/results.txt");
 			
 //			crawl.writeToFile(results);
