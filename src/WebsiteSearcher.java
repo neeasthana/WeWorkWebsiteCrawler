@@ -15,7 +15,7 @@ public class WebsiteSearcher extends Thread {
 
 	private String searchTerm;
 
-	private boolean result;
+	private boolean containsSearchTerm;
 
 	/**
 	 * 
@@ -46,7 +46,7 @@ public class WebsiteSearcher extends Thread {
 			// check if search term exists within the website's html
 			boolean exists = website.searchForTerm(searchTerm);
 
-			result = exists;
+			containsSearchTerm = exists;
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -71,12 +71,8 @@ public class WebsiteSearcher extends Thread {
 		this.searchTerm = searchTerm;
 	}
 
-	public boolean isResult() {
-		return result;
-	}
-
-	public void setResult(boolean result) {
-		this.result = result;
+	public boolean containsSearchTerm() {
+		return this.containsSearchTerm;
 	}
 
 }

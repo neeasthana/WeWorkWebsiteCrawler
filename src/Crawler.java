@@ -1,4 +1,6 @@
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,9 +62,7 @@ public class Crawler {
 		loadWebsites();
 	}
 
-	public List<String> search(String term) throws InterruptedException{
-		List<String> results = new ArrayList<String>();
-		
+	public List<String> search(String term) throws InterruptedException, IOException{
 		ArrayList<WebsiteSearcher> threads = new ArrayList<WebsiteSearcher>();
 		
 		for(String s : websites) {
@@ -71,13 +71,46 @@ public class Crawler {
 			thread.run();
 		}
 		
-		for(WebsiteSearcher thread : threads) {
+		List<String> results = compileResults(threads);
+		
+		writeResultsToFile(results);
+		
+		return results;
+	}
+	
+	/**
+	 * Waits as threads complete execution and gathers results of urls that contain the search term
+	 * 
+	 * @param websiteSearchers threads that execute the retreival of html and the search for the search term
+	 * @return website urls that contain the search term
+	 * @throws InterruptedException if thread joining is interrupted in any way
+	 */
+	private List<String> compileResults(List<WebsiteSearcher> websiteSearchers) throws InterruptedException{
+		List<String> results = new ArrayList<String>();
+		
+		for(WebsiteSearcher thread : websiteSearchers) {
 			thread.join();
-			if(thread.isResult())
+			if(thread.containsSearchTerm())
 				results.add(thread.getWebsite().getUrl());
 		}
 		
 		return results;
+	}
+	
+	/**
+	 * writes urls to results.txt in the current directory
+	 * 
+	 * @param urls to write to results.txt
+	 * @throws IOException
+	 */
+	private void writeResultsToFile(List<String> urls) throws IOException {
+		
+	    BufferedWriter writer = new BufferedWriter(new FileWriter("/home/neeraj/Documents/Projects/WeWorkWebsiteCrawler/src/something.txt", false));
+	    
+	    for(String s : urls)
+	    	writer.append(s + "\n");
+	     
+	    writer.close();
 	}
 	
 	public static void main(String[] args){
@@ -88,6 +121,19 @@ public class Crawler {
 		
 		for(String s : rs)
 			results.add(s);
+		
+		
+		try {
+			Crawler crawl = new Crawler("/home/neeraj/Documents/Projects/WeWorkWebsiteCrawler/src/results.txt");
+			
+//			crawl.writeToFile(results);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 //		Crawler crawl = new Crawler();
 //		try {
