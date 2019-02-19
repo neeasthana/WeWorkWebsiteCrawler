@@ -25,6 +25,7 @@ public class WebsiteFileReader {
 	}
 	
 	/**
+	 * Reads urls from the urls.txt file
 	 * 
 	 * @return list of urls found in the urls.txt file
 	 * @throws FileNotFoundException if file is not able to be retrieved

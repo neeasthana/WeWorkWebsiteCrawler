@@ -94,17 +94,29 @@ public class Crawler {
 		loadWebsites();
 	}
 
+	/**
+	 * Performs concurrent search for the searchTerm across multiple threads
+	 * 
+	 * @param term to search for within all websites in urls.txt
+	 * @return list of all websites that contain the search term
+	 * @throws InterruptedException if thread joining is interrupted in any way
+	 * @throws IOException if urlsFile is unable to be read
+	 */
 	public List<String> search(String term) throws InterruptedException, IOException{
+		// list of all threads executing searches across all websites listed in urls.txt
 		ArrayList<WebsiteSearcher> threads = new ArrayList<WebsiteSearcher>();
 		
+		// Launch a thread per website to search for the searchTerm
 		for(String s : websites) {
 			WebsiteSearcher thread = new WebsiteSearcher(semaphore, new Website(s), term);
 			threads.add(thread);
 			thread.run();
 		}
 		
+		// Wait for threads to complete execution and gather the results of their execution
 		List<String> results = compileResults(threads);
 		
+		// write results to results.txt
 		writeResultsToFile(results);
 		
 		return results;
